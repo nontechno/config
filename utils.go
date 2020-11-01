@@ -9,10 +9,29 @@ import (
 	"os"
 	"strings"
 
+	str "github.com/nontechno/strings"
 	log "github.com/sirupsen/logrus"
 )
 
 func expand(what string, retainValue bool) string {
+
+	const prefix = "${"
+	const postfix = "}"
+
+	resolver := str.EnvironmentResolver
+	if retainValue {
+		resolver = str.EnvironmentResolverIntact
+	}
+
+	logger := log.WithField("domain", "config.expand")
+	result, err := str.Expand(what, prefix, postfix, resolver, logger)
+	if err != nil {
+		logger.WithError(err).Errorf("unexpected failure during string expansion")
+	}
+	return result
+}
+
+func expandAlt(what string, retainValue bool) string {
 	return os.Expand(what, func(what string) string {
 		if expanded, found := os.LookupEnv(what); found {
 			return expanded
