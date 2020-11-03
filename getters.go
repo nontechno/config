@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetConfigValue(key, fallback string) string {
+func GetValue(key, fallback string) string {
 	configInit()
 	if len(defaultConfig) == 0 {
 		log.Errorf("the default configuration is missing")
@@ -27,7 +27,7 @@ func GetConfigValue(key, fallback string) string {
 	return fallback
 }
 
-func GetConfigFlag(flag string, fallback bool) bool {
+func GetFlag(flag string, fallback bool) bool {
 	configInit()
 	if len(defaultConfig) == 0 {
 		log.Errorf("the default configuration is missing")
@@ -46,3 +46,8 @@ func GetConfigFlag(flag string, fallback bool) bool {
 	}
 	return fallback
 }
+
+var (
+	GetConfigValue = GetValue
+	GetConfigFlag  = GetFlag
+)
