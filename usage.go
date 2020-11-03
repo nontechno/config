@@ -25,7 +25,7 @@ func onKeyMissing(key string) {
 }
 
 // this func produces textual report of the usage pattern of the defalt confuguration
-func ConfigUsageReport() string {
+func UsageReport() string {
 	defaultConfigGuard.Lock()
 	defer defaultConfigGuard.Unlock()
 
@@ -53,3 +53,7 @@ func ConfigUsageReport() string {
 
 	return report
 }
+
+var (
+	ConfigUsageReport = UsageReport
+)

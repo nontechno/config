@@ -12,6 +12,7 @@ func GetValue(key, fallback string) string {
 	configInit()
 	if len(defaultConfig) == 0 {
 		log.Errorf("the default configuration is missing")
+		onKeyMissing(key)
 		return fallback
 	}
 	if value, present := defaultConfig[key]; present {
@@ -29,11 +30,12 @@ func GetValue(key, fallback string) string {
 
 func GetFlag(flag string, fallback bool) bool {
 	configInit()
+	key := flag + suffixConfigFlag
 	if len(defaultConfig) == 0 {
 		log.Errorf("the default configuration is missing")
+		onKeyMissing(key)
 		return fallback
 	}
-	key := flag + suffixConfigFlag
 	if value, present := defaultConfig[key]; present {
 		onKeyFound(key)
 		return string2bool(value, fallback)
