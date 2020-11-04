@@ -5,20 +5,27 @@
 package config
 
 import (
+	"strconv"
 	"strings"
-	"time"
 )
 
-func GetDuration(key string, min, max, fallback time.Duration) time.Duration {
+func GetInt(key string, min, max, fallback int) int {
 	value := strings.Trim(GetValue(key, ""), trimCharset)
 	if len(value) == 0 {
 		return fallback
 	}
-	result, err := time.ParseDuration(value)
+
+	parsed, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
 		// todo: report the error maybe?
 		return fallback
 	}
+
+	if int64(int(parsed)) != parsed {
+		return fallback
+	}
+
+	result := int(parsed)
 
 	if result < min || result > max {
 		return fallback

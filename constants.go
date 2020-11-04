@@ -12,4 +12,5 @@ const (
 	keyDebugPrefix                 = "debug."                // prefix of debug-related keys (not included in "report")
 	envConfigurationFileName       = "CONFIG_FILENAME"       // env.var to specify the path/name of the config file to use
 	suffixConfigFlag               = ".flag"                 // indicator of a boolean value
+	trimCharset                    = " \t\r\n"
 )
