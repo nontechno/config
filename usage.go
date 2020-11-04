@@ -29,28 +29,46 @@ func UsageReport() string {
 	defaultConfigGuard.Lock()
 	defer defaultConfigGuard.Unlock()
 
-	report := "Configuration report:\n"
-	for key, count := range defaultConfigStats {
-		report += fmt.Sprintf("    [%s] = %d\n", key, count)
+	const (
+		askedAndFound    = 1
+		askedAndMissing  = 2
+		notAskedButFound = 3
+	)
+
+	meaning := map[int]string{
+		askedAndFound:    "asked + found",
+		askedAndMissing:  "asked - missing",
+		notAskedButFound: "unused",
+	}
+	stats := map[string]int{}
+
+	for key, _ := range defaultConfigStats {
+		if _, found := defaultConfig[key]; found {
+			stats[key] = askedAndFound
+		} else {
+			stats[key] = askedAndMissing
+		}
 	}
 
-	// report present but unused config values
-	unused := make([]string, 0, len(defaultConfig))
 	for key, _ := range defaultConfig {
 		if _, found := defaultConfigStats[key]; !found {
-			if key != keyConfigurationFileName && !strings.HasPrefix(key, keyDebugPrefix) {
-				unused = append(unused, key)
-			}
-		}
-	}
-	if len(unused) > 0 {
-		sort.Strings(unused)
-		report += "\nUnused configuration key(s):\n"
-		for _, key := range unused {
-			report += fmt.Sprintf("    [%s]\n", key)
+			stats[key] = notAskedButFound
 		}
 	}
 
+	sortedKeys := make([]string, 0, len(stats))
+	for key, _ := range stats {
+		sortedKeys = append(sortedKeys, key)
+	}
+	sort.Strings(sortedKeys)
+
+	report := "Configuration report:\n"
+	for _, key := range sortedKeys {
+		value := stats[key]
+		if key != keyConfigurationFileName && !strings.HasPrefix(key, keyDebugPrefix) {
+			report += fmt.Sprintf("    [%s] = %s\n", key, meaning[value])
+		}
+	}
 	return report
 }
 
