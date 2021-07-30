@@ -35,7 +35,7 @@ func loadDefaultConfiguration() (map[string]string, error) {
 	} else {
 		defaultConfig = config
 
-		if value, exist := defaultConfig["ignore.absent.config.values"+suffixConfigFlag]; exist {
+		if value, exist := defaultConfig["config.ignore.absent.values"+suffixConfigFlag]; exist {
 			reportMissingValues = !string2bool(value, false)
 		}
 
