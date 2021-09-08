@@ -11,5 +11,5 @@ var (
 	defaultConfigGuard        sync.Mutex
 	defaultConfigExplicitName string
 	defaultConfigStats        map[string]int
-	reportMissingValues       = true
+	reportMissingValues       = false
 )
