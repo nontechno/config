@@ -53,6 +53,8 @@ func LoadConfiguration(filename string) (map[string]string, error) {
 			results[k] = strconv.Itoa(i)
 		} else if b, converts := v.(bool); converts {
 			results[k] = strconv.FormatBool(b)
+		} else if f, converts := v.(float64); converts {
+			results[k] = strconv.FormatFloat(f, 'g', -1, 32)
 		} else {
 			log.Errorf("failed to ingest value of the key (%s) from file (%s)", k, filename)
 		}
